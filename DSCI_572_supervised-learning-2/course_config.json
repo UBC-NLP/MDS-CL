@@ -1,0 +1,43 @@
+{
+    "lab1" : {
+        "weight" : 0.15,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "blank_labs/Lab1/Lab1.*",
+        "deadline": "2021-01-16 23:59"
+    },
+    "lab2" : {
+        "weight" : 0.15,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "blank_labs/Lab2/Lab2.*",
+        "deadline": "2021-01-23 23:59"
+    },
+    "lab3" : {
+        "weight" : 0.15,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "blank_labs/Lab3/Lab3.*",
+        "deadline": "2021-01-30 23:59"
+    },
+    "lab4" : {
+        "weight" : 0.15,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "blank_labs/Lab4/Lab4.*",
+        "deadline": "2021-02-06 23:59"
+    },
+    "quiz1" : {
+        "weight" : 0.2,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "quiz/quiz1_placeholder.md"
+    },
+    "quiz2" : {
+        "weight" : 0.2,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "quiz/quiz2_placeholder.md"
+    },
+    "canvas-id": 62683
+}

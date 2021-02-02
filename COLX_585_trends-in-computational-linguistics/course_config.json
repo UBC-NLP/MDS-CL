@@ -1,0 +1,45 @@
+{
+    "milestone1" : {
+        "weight" : 0.10,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "milestones/milestone1/milestone1.md",
+        "deadline": "2020-04-04 18:00"
+    },
+    "milestone2" : {
+        "weight" : 0.15,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "milestones/milestone2/milestone2.md",
+        "deadline": "2020-04-11 18:00"
+    },
+    "milestone3" : {
+        "weight" : 0.15,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "milestones/milestone3/milestone3.md",
+        "deadline": "2020-04-18 18:00"
+    },
+    "milestone4_pres" : {
+        "weight" : 0.05,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "milestones/milestone4a/milestone4a.md",
+        "deadline": "2020-04-22 18:00"
+    },
+    "milestone4_fp" : {
+        "weight" : 0.25,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "milestones/milestone4b/milestone4b.md",
+        "deadline": "2020-04-25 18:00"
+    },
+    "teamwork" : {
+        "weight" : 0.30,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "teamwork_report/teamwork_report.md",
+        "deadline": "2020-04-28 18:00"
+    },
+    "canvas-id": 35629
+}

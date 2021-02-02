@@ -1,0 +1,31 @@
+{
+    "lab1" : {
+        "weight" : 0.23,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "blank_labs/Lab1/Lab1.*",
+        "deadline": "2020-02-29 18:00"
+    },
+    "lab2" : {
+        "weight" : 0.23,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "blank_labs/Lab2/Lab2.*",
+        "deadline": "2020-03-07 18:00"
+    },
+    "lab3" : {
+        "weight" : 0.23,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "blank_labs/Lab3/Lab3.*",
+        "deadline": "2020-03-14 18:00"
+    },
+    "lab4" : {
+        "weight" : 0.31,
+        "peer-review" : 0,
+        "public-after-submit" : false,
+        "main-file" : "blank_labs/Lab4/Lab4.*",
+        "deadline": "2020-03-21 18:00"
+    },
+    "canvas-id": 35624
+}

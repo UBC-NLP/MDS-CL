@@ -1,0 +1,1 @@
+Please grab the data folders "happy_db" and "sentiment-twitter-2016-task4" from https://github.ubc.ca/MDS-CL-2020-21/DSCI_572_sup-learn-2_students/tree/master/data/lab3 into this directory to use for Lab 3.

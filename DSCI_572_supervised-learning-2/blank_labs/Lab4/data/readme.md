@@ -1,0 +1,1 @@
+See here: https://github.ubc.ca/MDS-CL-2020-21/DSCI_572_sup-learn-2_students/tree/master/data/lab4/ for both the HappyDB data needed for the tutorial, as well as the Yelp review dataset needed for the homework. 

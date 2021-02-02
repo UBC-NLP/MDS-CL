@@ -1,0 +1,56 @@
+### 2.2 Write code to inplement global attention with dot product/multiplicative attention function
+rubric={mechanics:1}
+
+Intead of using the **additive attention** to get attenntion score $a_t$:
+$$\alpha_i = softmax(v_a \tanh(W_a[S_{i-1}; H]^T))$$
+
+**We will use the *global attention with dot product alignment function* (Dot-Product/Multiplicative based attention function, that is, $\alpha_i = softmax([s_{i}^T h_1,\cdots,s_{i}^T h_t])$ to calculate attention score $\alpha_i$ and follow the subsequent steps to generate translation token $\hat{y_{i+1}}$**: 
+1. initialize the `outputs` tensor is created to hold all predictions, $\hat{Y} = \{\hat{y_1} ... \hat{y_t}\}$ where t is the maximal length of target language;
+2. the source sequence, $X = \{x_1,..., x_t\}$, is fed into the encoder to receive last hidden state, $h_t$, and last cell state $c^{Encoder}_t$;
+3. the initial decoder hidden state is set to the $h_t$, and the initial decoder cell state is set to the $c_t$. (i.e., $s_0$ = $h_t$; $c^{Decoder}_0$ = $c^{Encoder}_t$);
+4. we use a batch of `<sos>` tokens as the first `input` (i.e., $y_1$);
+5. we then decode within a loop:
+
+ for i in range(1,t): #t is the maximal length of target language
+    1. inserting the input token $y_{i}$, previous hidden state, $s_{i-1}$, and previous cell state, $c^{Decoder}_{i-1}$, into the Decoder, we get new hidden and cell states, $s_{i}$ and $c^{Decoder}_{i}$;
+    2. use **`attention_function()`** to calculate the attention vector, $\alpha_i$, based on $h_1,\dots,h_t$ (all encoder hidden states stacked up is $H$) and $s_{i}$;
+    3. use this attention vector to create a weighted context vector, $c_i$, denoted by `weighted`, which is a weighted sum of the encoder hidden states, $H$, using $\alpha_i$ as the weights (i.e., $c_i = \alpha_i^T H$);
+    4. concatenate the current hidden state $s_i$ with weighted context vector $c_i$, then pass this concatanation through a linear layer, $f_{mid}$, to get a new hidden state $s'_{i}$ that shape is `[batch, decoder hidden dimension]`;
+    5. pass $s'_{i}$ through the linear layer, $f_{output}$, to make a prediction of the next word in the target sentence, $\hat{y}_{i+1}$.
+    6. decide if use **teacher forcing** or not, setting the next input as appropriate.
+
+
+where **`attention_function()`** is based on **dot product attention**:
+$\alpha_i = softmax([s_{i}^T h_1,\cdots,s_{i}^T h_t])$
+
+
+**The pseudo code for computing attention vector:**
+
+```
+class Attention(nn.Module):
+        INPUT: 
+        current Decoder hidden state (s_{i}), decoder_output: [batch size, dec hid dim]
+        all hidden state of last layer of Encoder (H), encoder_outputs: [src len, batch size, enc hid dim]
+        OUTPUT: 
+        attention_vector (\alpha_i), attention_vector: [batch size, src len]
+        ------------------------------------------------------------------------------------------
+        # For-loop version: 
+        attention_vector = Variable(torch.zeros(batch_size, encoder_src_len))
+
+        # For every batch, every time step of encoder's hidden state, calculate attention score.
+        for b in range(batch_size):
+            for t in range(max_src_len):
+                # Luong et al. (2015) equation(8) -- dot form content-based attention:
+                attention_vector[b,t] = decoder_output[b] **dot product** encoder_outputs[t,b]
+                
+        ------------------------------------------------------------------------------------------
+        # Vectorized version:
+
+        1. attention_vector =  
+           (batch_size, seq_len=1, hidden_size) **batch matrix-matrix product** (batch_size, hidden_size, max_src_len) = (batch_size, seq_len=1, max_src_len)
+           
+         return attention_vector
+```
+
+Equation 8 from Luong's paper is:
+<img src="attention_images/luong_eqn8.png\" title="equation 8 from Luong paper" height="550" width="450"/>

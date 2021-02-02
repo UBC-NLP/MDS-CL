@@ -1,0 +1,104 @@
+def inference(model, file_name, src_vocab, trg_vocab, attention=False, max_trg_len = 64):
+    '''
+    Function for translation inference
+
+    Input: 
+    model: translation model;
+    file_name: the directoy of test file that the first column is target reference, and the second column is source language;
+    trg_vocab: Target torchtext Field
+    attention: the model returns attention weights or not.
+    max_trg_len: the maximal length of translation text (optinal), default = 64
+
+    Output:
+    Corpus BLEU score.
+    '''
+    from nltk.translate.bleu_score import corpus_bleu
+    from nltk.translate.bleu_score import sentence_bleu
+    from torchtext.data import TabularDataset
+    from torchtext.data import Iterator
+
+    # convert index to text string
+    def convert_itos(convert_vocab, token_ids):
+        list_string = []
+        for i in token_ids:
+            if i == convert_vocab.vocab.stoi['<eos>']:
+                break
+            else:
+                token = convert_vocab.vocab.itos[i]
+                list_string.append(token)
+        return list_string
+
+    test = TabularDataset(
+      path=file_name, # the root directory where the data lies
+      format='tsv',
+      skip_header=True, # if your tsv file has a header, make sure to pass this to ensure it doesn't get proceesed as data!
+      fields=[('TRG', trg_vocab), ('SRC', src_vocab)])
+
+    test_iter = Iterator(
+    dataset = test, # we pass in the datasets we want the iterator to draw data from
+    sort = False,batch_size=128,
+    sort_key=None,
+    shuffle=False,
+    sort_within_batch=False,
+    device = device,
+    train=False
+    )
+  
+    model.eval()
+    all_trg = []
+    all_translated_trg = []
+
+    TRG_PAD_IDX = trg_vocab.vocab.stoi[trg_vocab.pad_token]
+
+    with torch.no_grad():
+    
+        for i, batch in enumerate(test_iter):
+
+            src = batch.SRC
+            #src = [src len, batch size]
+
+            trg = batch.TRG
+            #trg = [trg len, batch size]
+
+            batch_size = trg.shape[1]
+
+            # create a placeholder for traget language with shape of [max_trg_len, batch_size] where all the elements are the index of <pad>. Then send to device
+            trg_placeholder = torch.Tensor(max_trg_len, batch_size)
+            trg_placeholder.fill_(TRG_PAD_IDX)
+            trg_placeholder = trg_placeholder.long().to(device)
+            if attention == True:
+                output,_ = model(src, trg_placeholder, 0) #turn off teacher forcing
+            else:
+                #original 
+                #output,_ = model(src, trg_placeholder, 0) #turn off teacher forcing
+                
+                # update:
+                output = model(src, trg_placeholder, 0) #turn off teacher forcing
+            # get translation results, we ignor first token <sos> in both translation and target sentences. 
+            # output_translate = [(trg len - 1), batch, output dim] output dim is size of target vocabulary.
+            output_translate = output[1:]
+            # store gold target sentences to a list 
+            all_trg.append(trg[1:].cpu())
+
+            # Choose top 1 word from decoder's output, we get the probability and index of the word
+            prob, token_id = output_translate.data.topk(1)
+            translation_token_id = token_id.squeeze(2).cpu()
+
+            # store gold target sentences to a list 
+            all_translated_trg.append(translation_token_id)
+      
+    all_gold_text = []
+    all_translated_text = []
+    for i in range(len(all_trg)): 
+        cur_gold = all_trg[i]
+        cur_translation = all_translated_trg[i]
+        for j in range(cur_gold.shape[1]):
+            gold_convered_strings = convert_itos(trg_vocab,cur_gold[:,j])
+            trans_convered_strings = convert_itos(trg_vocab,cur_translation[:,j])
+
+            all_gold_text.append(gold_convered_strings)
+            all_translated_text.append(trans_convered_strings)
+
+    corpus_all_gold_text = [[item] for item in all_gold_text]
+    corpus_bleu_score = corpus_bleu(corpus_all_gold_text, all_translated_text)  
+    return corpus_bleu_score
